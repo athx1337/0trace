@@ -135,24 +135,49 @@ export default function App() {
 
   const handleInput = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key !== "Enter") return;
-    const val = inputVal.trim().toLowerCase();
+    const val = inputVal.trim();
     if (!val) return;
 
-    const matched = TOOLS.find(t => t.name === val || t.label.toLowerCase() === val);
-    if (matched) {
-      setInputHistory(h => [...h, inputVal]);
-      setInputVal("");
-      handleLaunch(matched);
-    } else if (val === "help") {
-      setInputHistory(h => [...h, inputVal, "__help__"]);
-      setInputVal("");
-    } else if (val === "clear") {
+    if (val.toLowerCase() === "clear") {
       setInputHistory([]);
       setInputVal("");
-    } else {
-      setInputHistory(h => [...h, inputVal, `__error__:command not found: ${val}`]);
-      setInputVal("");
+      return;
     }
+
+    const newHistory = [...inputHistory, val];
+    const args = val.split(" ").filter(Boolean);
+    const cmd = args[0].toLowerCase();
+
+    if (cmd === "help") {
+      newHistory.push("__help__");
+    } else if (cmd === "ls" || cmd === "ll" || cmd === "dir") {
+      newHistory.push("__ls__");
+    } else if (cmd === "whoami") {
+      newHistory.push("__output__:root");
+    } else if (cmd === "pwd") {
+      newHistory.push("__output__:/home/root/tools");
+    } else if (cmd === "date") {
+      newHistory.push(`__output__:${new Date().toString()}`);
+    } else if (cmd === "echo") {
+      newHistory.push(`__output__:${args.slice(1).join(" ")}`);
+    } else if (cmd === "sudo") {
+      newHistory.push("__error__:user is not in the sudoers file. This incident will be reported.");
+    } else {
+      let matched = TOOLS.find(t => t.name === cmd || `./${t.name}` === cmd || t.label.toLowerCase() === cmd);
+      if (cmd.startsWith("./")) {
+        const withoutDotSlash = cmd.substring(2);
+        matched = TOOLS.find(t => t.name === withoutDotSlash || t.label.toLowerCase() === withoutDotSlash);
+      }
+
+      if (matched) {
+        handleLaunch(matched);
+      } else {
+        newHistory.push(`__error__:command not found: ${cmd}`);
+      }
+    }
+
+    setInputHistory(newHistory);
+    setInputVal("");
   };
 
   const onlineCount = TOOLS.filter(t => t.online).length;
@@ -237,24 +262,64 @@ export default function App() {
           </div>
         )}
 
-        {inputHistory.map((line, i) => (
-          line.startsWith("__error__:") ? (
-            <div key={i} className="history-err">
-              0trace: {line.replace("__error__:", "")}
-            </div>
-          ) : line === "__help__" ? (
-            <div key={i} className="history-help">
-              <div>available commands:</div>
-              <div className="history-help-indent">{"./[toolname]  — launch tool"}</div>
-              <div className="history-help-indent">{"help          — show this message"}</div>
-              <div className="history-help-indent">{"clear         — clear history"}</div>
-            </div>
-          ) : (
+        {inputHistory.map((line, i) => {
+          if (line.startsWith("__error__:")) {
+            return (
+              <div key={i} className="history-err">
+                0trace: {line.replace("__error__:", "")}
+              </div>
+            );
+          }
+          if (line === "__help__") {
+            return (
+              <div key={i} className="history-help">
+                <div>available commands:</div>
+                <div className="history-help-indent">{"./[toolname]  — launch tool"}</div>
+                <div className="history-help-indent">{"ls            — list tools"}</div>
+                <div className="history-help-indent">{"whoami        — print active user"}</div>
+                <div className="history-help-indent">{"pwd           — print working directory"}</div>
+                <div className="history-help-indent">{"date          — print current date"}</div>
+                <div className="history-help-indent">{"echo [text]   — print text"}</div>
+                <div className="history-help-indent">{"clear         — clear history"}</div>
+                <div className="history-help-indent">{"help          — show this message"}</div>
+              </div>
+            );
+          }
+          if (line === "__ls__") {
+            return (
+              <div key={i} className="tool-list-container" style={{ margin: "0.5rem 0" }}>
+                <div className="tool-list-header">
+                  total {totalCount} &nbsp;&nbsp; [{onlineCount} online // {totalCount - onlineCount} offline]
+                </div>
+                {TOOLS.map((tool) => (
+                  <div key={tool.name} className={`tool-item ${tool.online ? "online" : "offline"}`} style={{ opacity: 0.8, cursor: "default" }}>
+                    <span className="tool-perms">{tool.online ? "-rwxr-xr-x" : "-rw-r--r--"}</span>
+                    <span className="tool-links">1</span>
+                    <span className="tool-owner">root</span>
+                    <span className="tool-owner">athx</span>
+                    <span className="tool-size">{tool.size}</span>
+                    <span className="tool-date">{DATE}</span>
+                    <span className="tool-name">{tool.name}</span>
+                    <span className="tool-desc"># {tool.desc}</span>
+                    {!tool.online && <span className="tool-offline-tag">[OFFLINE]</span>}
+                  </div>
+                ))}
+              </div>
+            );
+          }
+          if (line.startsWith("__output__:")) {
+            return (
+              <div key={i} className="history-line" style={{ opacity: 0.8, marginTop: "-0.125rem", whiteSpace: "pre-wrap" }}>
+                {line.replace("__output__:", "")}
+              </div>
+            );
+          }
+          return (
             <div key={i} className="history-line">
               <span className="cmd-prompt">{PROMPT} </span>{line}
             </div>
-          )
-        ))}
+          );
+        })}
 
         {phase === "idle" && (
           <div className="active-input-wrap">
