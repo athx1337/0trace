@@ -170,15 +170,7 @@ export default function App() {
           <span>{DATE}</span>
         </div>
 
-        <pre className="ascii-banner">
-{` ▄▄▄▄▄▄  ▄▄▄▄▄▄▄ ▄▄▄▄▄▄   ▄▄▄▄▄▄   ▄▄▄▄▄▄  ▄▄▄▄▄▄▄ 
-█      ██       █   ▄  █ █      █ █      ██       █
-█  ▄   ██▄     ▄█  █ █ █ █  ▄   ██       █       █
-█ █▄█  █ █   █ █   █▄▄█▄▀█ █▄█  ██     ██▄     ▄▄█
-█      █ █   █ █    ▄▄  █      ██    ▄  █ █   █▄▄  
-█  ▄   █ █   █ █   █  █ █  ▄   ██   █▄▄█ █   █▄▄▄ 
-█▄█ █▄▄█ █▄▄▄█ █▄▄▄█  █▄█▄█ █▄▄█▄▄▄▄▄▄▄██▄▄▄█▄▄▄▄█`}
-        </pre>
+        <img src="/0trace-ascii-removebg-preview.png" alt="0trace banner" className="ascii-banner" />
 
         <div className="divider">
           {"─".repeat(72)}

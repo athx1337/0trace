@@ -102,6 +102,13 @@ body, html {
   text-shadow: 0 0 8px rgba(0, 255, 156, 0.6);
 }
 
+img.ascii-banner {
+  filter: drop-shadow(0 0 8px rgba(0, 255, 156, 0.6));
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
 @media (min-width: 768px) {
   .ascii-banner {
     font-size: 12px;
