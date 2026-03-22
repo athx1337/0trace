@@ -1,0 +1,306 @@
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
+:root {
+  --neon-green: #00ff9c;
+  --bg-color: #080808;
+  --text-active: #080808;
+}
+
+body, html {
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-color);
+  color: var(--neon-green);
+  font-family: 'Share Tech Mono', 'Courier New', monospace;
+  overflow-x: hidden;
+  height: 100vh;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* CRT Screen Base Effects */
+.crt-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  max-width: 56rem; /* 896px */
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+  text-shadow: 0 0 2px rgba(0, 255, 156, 0.4), 0 0 5px rgba(0, 255, 156, 0.1);
+  position: relative;
+  z-index: 10;
+}
+
+@media (min-width: 768px) {
+  .crt-container {
+    padding: 2rem;
+  }
+}
+
+/* Scanline Overlay */
+.scanlines {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.15),
+    rgba(0, 0, 0, 0.15) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+  pointer-events: none;
+  z-index: 50;
+  opacity: 0.8;
+}
+
+/* Flicker Animation */
+@keyframes flicker {
+  0% { opacity: 0.95; }
+  5% { opacity: 0.85; }
+  10% { opacity: 0.95; }
+  15% { opacity: 1; }
+  50% { opacity: 0.95; }
+  100% { opacity: 1; }
+}
+
+.crt-flicker {
+  animation: flicker 0.15s infinite;
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 255, 156, 0.02);
+  z-index: 49;
+}
+
+/* Layout and Utilities */
+.header-line {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  opacity: 0.5;
+  margin-bottom: 1.5rem;
+  text-shadow: 0 0 4px var(--neon-green);
+}
+
+.ascii-banner {
+  font-size: 10px;
+  line-height: 1.2;
+  margin-bottom: 1.5rem;
+  opacity: 0.8;
+  user-select: none;
+  overflow-x: auto;
+  text-shadow: 0 0 8px rgba(0, 255, 156, 0.6);
+}
+
+@media (min-width: 768px) {
+  .ascii-banner {
+    font-size: 12px;
+  }
+}
+
+.divider {
+  opacity: 0.3;
+  margin-bottom: 1.5rem;
+  font-size: 0.75rem;
+  white-space: pre;
+}
+
+.cmd-line {
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+}
+
+.cmd-prompt {
+  opacity: 0.6;
+  white-space: pre;
+}
+
+.cursor {
+  display: inline-block;
+  width: 8px;
+  height: 16px;
+  background-color: var(--neon-green);
+  margin-left: 4px;
+  vertical-align: middle;
+  box-shadow: 0 0 8px var(--neon-green);
+  transition: opacity 0.1s;
+}
+
+.cursor.hidden {
+  opacity: 0;
+}
+
+.tool-list-container {
+  margin-bottom: 1rem;
+}
+
+.tool-list-header {
+  font-size: 0.75rem;
+  opacity: 0.5;
+  margin-bottom: 0.5rem;
+}
+
+.tool-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  margin: 0 -0.5rem;
+  transition: all 0.1s ease;
+  user-select: none;
+  letter-spacing: 0.02em;
+}
+
+.tool-item.online {
+  cursor: pointer;
+  color: var(--neon-green);
+}
+
+.tool-item.offline {
+  cursor: not-allowed;
+  opacity: 0.35;
+}
+
+.tool-item.hovered {
+  background-color: var(--neon-green);
+  color: var(--text-active);
+  text-shadow: none;
+  box-shadow: 0 0 10px rgba(0, 255, 156, 0.3);
+}
+
+.tool-item.hovered * {
+  color: var(--text-active) !important;
+  opacity: 1 !important;
+}
+
+.tool-perms, .tool-owner {
+  opacity: 0.6;
+}
+.tool-links {
+  opacity: 0.5;
+}
+.tool-size {
+  width: 2.5rem;
+  text-align: right;
+  opacity: 0.5;
+}
+.tool-date {
+  opacity: 0.5;
+}
+.tool-name {
+  font-weight: bold;
+  letter-spacing: 0.05em;
+}
+.tool-desc {
+  display: none;
+  opacity: 0.4;
+}
+@media (min-width: 768px) {
+  .tool-desc { display: inline; }
+}
+.tool-offline-tag {
+  margin-left: auto;
+  font-size: 10px;
+  opacity: 0.6;
+}
+.tool-launch-hint {
+  margin-left: auto;
+  font-weight: bold;
+  font-size: 10px;
+}
+
+.launch-seq {
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+}
+.launch-init {
+  font-size: 0.75rem;
+}
+.launch-init-text { opacity: 0.7; }
+.launch-init-name { font-weight: bold; text-shadow: 0 0 5px var(--neon-green); }
+.launch-redir {
+  font-size: 0.75rem;
+  opacity: 0.5;
+  margin-top: 0.125rem;
+}
+
+.history-err {
+  font-size: 0.75rem;
+  color: #ff4444;
+  margin-bottom: 0.25rem;
+  opacity: 0.9;
+  text-shadow: 0 0 4px rgba(255, 68, 68, 0.5);
+}
+.history-help {
+  font-size: 0.75rem;
+  opacity: 0.7;
+  margin-bottom: 0.5rem;
+  line-height: 1.6;
+}
+.history-help-indent {
+  margin-left: 1rem;
+}
+.history-line {
+  font-size: 0.75rem;
+  margin-bottom: 0.25rem;
+  opacity: 0.6;
+}
+
+.active-input-wrap {
+  display: flex;
+  align-items: center;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+.terminal-input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--neon-green);
+  width: 100%;
+  caret-color: transparent; /* hide native caret */
+  font-family: inherit;
+  font-size: 14px;
+  text-shadow: inherit;
+}
+
+.input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.footer {
+  border-top: 1px solid rgba(0, 255, 156, 0.2);
+  padding: 0.5rem 1rem;
+  font-size: 9px;
+  opacity: 0.4;
+  display: flex;
+  justify-content: space-between;
+  box-shadow: 0 -2px 10px rgba(0, 255, 156, 0.05);
+  position: relative;
+  z-index: 10;
+}
+@media (min-width: 768px) {
+  .footer { padding: 0.5rem 2rem; }
+}
+
+/* Sub-pixel text rendering for CRT feel */
+* {
+  -webkit-font-smoothing: subpixel-antialiased;
+}
