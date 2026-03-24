@@ -9,7 +9,7 @@ const TOOLS = [
     desc: "ip_intelligence // reputation & geolocation",
     category: "RECON",
     size: "4096",
-    url: "http://localhost:5173/",
+    url: "https://voidtrace.vercel.app/",
     online: true,
   },
   {
