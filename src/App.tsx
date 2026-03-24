@@ -3,6 +3,16 @@ import './index.css';
 
 const TOOLS = [
   {
+    id: "03",
+    name: "voidtrace",
+    label: "VOIDTRACE",
+    desc: "ip_intelligence // reputation & geolocation",
+    category: "RECON",
+    size: "4096",
+    url: "http://localhost:5173/",
+    online: true,
+  },
+  {
     name: "webtrace",
     label: "WEBTRACE",
     desc: "domain_analysis // osint intelligence suite",
