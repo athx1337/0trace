@@ -16,6 +16,7 @@
 ## 🛠️ Integrated Tools
 | Tool | Status | Description |
 | :--- | :--- | :--- |
+| **VOIDTRACE** | 🟢 Online | High-Velocity IP Intelligence & Reputation suite |
 | **WEBTRACE** | 🟢 Online | Domain analysis & OSINT intelligence suite |
 | **PHISHX** | 🟢 Online | URL scanner & phishing detection engine |
 | **DNSMAP** | 🔴 Offline | DNS recon & zone enumeration tool |
